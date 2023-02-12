@@ -31,7 +31,7 @@ export class AuthService {
     private readonly activeCountry: ActiveCountryService,
   ) {}
 
-  public async addNaylamConfig(user: User) {
+  public async addConfig(user: User) {
     let country_selected = await this.countryRepository.findOne({
       where: {
         country_name: 'Saudi Arabia',
@@ -123,7 +123,7 @@ export class AuthService {
     user.createdAt = new Date();
     user.naylamDispatcherCountries = countries;
     const saved = await this.repository.save(user);
-    if (!companyDispatcher) await this.addNaylamConfig(saved);
+    if (!companyDispatcher) await this.addConfig(saved);
     return { result: 'success' };
   }
 
