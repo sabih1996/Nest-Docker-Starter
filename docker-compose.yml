@@ -1,0 +1,74 @@
+services:
+  dev:
+    container_name: nestjs_starter
+    image: nestjs-starter:1.0.0
+    build:
+      context: .
+      target: development
+      dockerfile: ./Dockerfile
+    command: npm run start:debug
+    ports:
+      - 3500:3000
+      - 8001:8001
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+  # qa:
+  #     container_name: nestjs_api_qa
+  #     image: nestjs-api-qa:1.0.5
+  #     build:
+  #         context: .
+  #         target: qa
+  #         dockerfile: ./Dockerfile
+  #     command: npm run start:debug
+  #     ports:
+  #         - 4000:3000
+  #     environment:
+  #         - NODE_ENV=qa
+  #     volumes:
+  #         - .:/usr/src/app
+  #         - /usr/src/app/node_modules
+  #     depends_on:
+  #       - postgres
+  #     restart: unless-stopped
+
+  # prod:
+  #   container_name: nestjs_api_prod
+  #   image: nestjs-api-prod:1.0.5
+  #   build:
+  #     context: .
+  #     target: production
+  #     dockerfile: ./Dockerfile
+  #   command: npm run start:prod
+  #   ports:
+  #     - 3200:3000
+  #   volumes:
+  #     - .:/usr/src/app
+  #     - /usr/src/app/node_modules
+  #   environment:
+  #     - NODE_ENV=production
+  #   depends_on:
+  #     - postgres
+  #   restart: unless-stopped
+
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - '5432:5432'
+    volumes:
+      - docker-nest-db:/var/lib/postgresql/data
+volumes:
+  docker-nest-db:
+networks:
+  nesjts-network:
